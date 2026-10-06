@@ -1,0 +1,34 @@
+# Generated from BenchmarkSpecDefinitions.xlsx::Parameters_SmokeBaselineExtend for workload 230.
+# Parameter names come from Parameter_01..Parameter_20. Values come only from Parameters_SmokeBaselineExtend.
+# Do not invent or replace these tokens/numbers. Nested list/map reshaping is allowed
+# when the runner needs structured sweeps; keep the same tokens and numbers.
+# Command columns on Workload_Definitions are generated display. Sweep/list flags in those
+# commands are documentary; omit them so yaml expands cases.
+# sweep.profile is baseline for LLM Serving and smoke otherwise.
+# Add thresholds: or baselines: from hardware_profile.mi300x.yaml and Workload Type.
+sweep:
+  profile: baseline
+  model_name: mistralai/Mistral-7B-v0.3
+  dtype: bfloat16
+  tensor_parallel_size: 1
+  schedule_policy: lpm
+  prompt_source: synthetic
+  input_len:
+    smoke: 64
+    baseline: 512
+    extended: 1024
+  output_len:
+    smoke: 16
+    baseline: 3870
+    extended: 15890
+  max_total_tokens:
+    smoke: 2048
+    baseline: 16384
+    extended: 32768
+  max_running_requests: 1
+  max_concurrency: 1
+  request_rate: inf
+  num_prompts:
+    smoke: 2
+    baseline: 8
+    extended: 8
