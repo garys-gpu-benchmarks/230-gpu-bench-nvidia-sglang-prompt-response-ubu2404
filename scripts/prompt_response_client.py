@@ -237,8 +237,10 @@ def main() -> int:
             row["completed_request_rate_pct"] = completed_pct
             row["radixattention_cache_hit_rate_pct"] = hit_rate if row["status"] == "ok" else NA_FAILED
         row.update(meta)
+    for row in rows:
+        row.pop("server_identity", None)
     fieldnames = ["request_id", "sample_index", "status", "input_tokens", "output_tokens", *METRIC_KEYS,
-                  "prompt_tokens", "cached_tokens", "error_message", "server_identity", *meta]
+                  "prompt_tokens", "cached_tokens", "error_message", *meta]
     csv_path = run_dir / "raw_results.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
