@@ -14,7 +14,7 @@ Locked run_benchmark.sh starts a server on 127.0.0.1:30000 then scripts/prompt_r
 | schedule_policy | `--schedule-policy` | smoke=lpm, baseline=lpm, extended=lpm | lpm | From Parameter list; see Execution Description With Parameters. |
 | prompt_source | `--prompt-source` | smoke=synthetic, baseline=synthetic, extended=synthetic | synthetic | From Parameter list; see Execution Description With Parameters. |
 | input_len | `--input-len` | smoke=64, baseline=512, extended=1024 | 512 | From Parameter list; see Execution Description With Parameters. |
-| output_len | `--output-len` | smoke=16, baseline=1650, extended=12000 | 1650 | From Parameter list; see Execution Description With Parameters. |
+| output_len | `--output-len` | smoke=16, baseline=1200, extended=12000 | 1200 | From Parameter list; see Execution Description With Parameters. |
 | max_total_tokens | `--max-total-tokens` | smoke=2048, baseline=16384, extended=32768 | 16384 | From Parameter list; see Execution Description With Parameters. |
 | max_running_requests | `--max-running-requests` | smoke=1, baseline=1, extended=1 | 1 | From Parameter list; see Execution Description With Parameters. |
 | max_concurrency | `--max-concurrency` | smoke=1, baseline=1, extended=1 | 1 | From Parameter list; see Execution Description With Parameters. |
