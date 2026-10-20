@@ -19,8 +19,8 @@ sweep:
     extended: 1024
   output_len:
     smoke: 16
-    baseline: 3870
-    extended: 15890
+    baseline: 1650
+    extended: 12000
   max_total_tokens:
     smoke: 2048
     baseline: 16384
