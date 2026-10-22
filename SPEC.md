@@ -36,8 +36,8 @@ request_id,sample_index,status,input_tokens,output_tokens,end_to_end_latency_ms,
 
 ## Metrics
 
-- **#1: E2E latency, ms** — stored as `end_to_end_latency_ms`.
-- **#2: Time To First Token** — stored as `ttft_ms`.
+- **#1: E2E latency p50, ms** — stored as `end_to_end_latency_ms`.
+- **#2: Time To First Token p50, ms** — stored as `ttft_ms`.
 - **#3: Output token generation rate** — stored as `decode`.
 - **#4: RadixAttn hit rate, pct** — stored as `radixattention_cache_hit_rate_pct`.
 - **#5: Completed request rate, pct** — stored as `completed_request_rate_pct`.
