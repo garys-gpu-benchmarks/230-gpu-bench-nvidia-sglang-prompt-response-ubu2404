@@ -85,7 +85,7 @@ Three operator scripts from [`garys-gpu-benchmarks/gpu-bench-suite`](https://git
 
 ## 1. Overview
 
-Locked run_benchmark.sh starts a server on 127.0.0.1:30000 then scripts/prompt_response_client.py (sequential, one request in flight). Smoke uses scripts/tiny_sglang_server.py. Baseline/extended use python -m sglang.launch_server with Mistral-7B-v0.3. yaml dtype bfloat16 is passed by run_benchmark.sh to both the server and prompt_response_client.py. Sweep dimensions: model_name, dtype, tensor_parallel_size, schedule_policy, prompt_source, input_len, output_len, max_total_tokens.
+Locked run_benchmark.sh starts a server on 127.0.0.1:30000 then scripts/prompt_response_client.py (sequential, one request in flight). Smoke uses scripts/tiny_sglang_server.py. Baseline/extended use python -m sglang.launch_server with Mistral-7B-v0.3. yaml dtype bfloat16 is passed by run_benchmark.sh to both the server and prompt_response_client.py. Sweep dimensions: dtype, input_len, output_len, model_name, num_prompts, max_running_requests, max_total_tokens, seed.
 
 ## 2. What It Validates
 
