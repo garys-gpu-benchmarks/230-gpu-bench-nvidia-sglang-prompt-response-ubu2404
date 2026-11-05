@@ -2,8 +2,8 @@
 # File: run_benchmark.sh
 # Version: 1.0.0
 # Description: Smoke uses tiny_sglang; baseline/extended launch python -m sglang.launch_server.
-# Execution: bash run_benchmark.sh [--smoke|--baseline|--extended] [--validate]
-# Options: --smoke, --baseline, --extended, --config, --validate, --no-validate, --quiet, --log-level, --model-name, --dtype, --input-len, --output-len, --num-prompts, --seed, --specification, --help
+# Execution: bash run_benchmark.sh [--smoke|--baseline|--extended]
+# Options: --smoke, --baseline, --extended, --config, --quiet, --log-level, --model-name, --dtype, --input-len, --output-len, --num-prompts, --seed, --specification, --help
 set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_NAME="$(basename "${REPO_ROOT}")"
@@ -22,21 +22,12 @@ Usage: bash run_benchmark.sh [OPTIONS]
 Run smoke/baseline/extended profile
 Run 1) Git provided Python SGLang inference LLM server (sglang.launch_server.py), and 2) User-created Python sequential prompt-response client (prompt_response_client.py).
 
-Profiles:
+Profiles (default: --smoke):
   --smoke                       Run smoke profile
   --baseline                    Run baseline profile
   --extended                    Run extended profile
 
-Execution:
-  --config <file>               Config file (default: config/benchmark_config.yaml)
-
-Validation and logging:
-  --validate                    Enable result validation (default)
-  --no-validate                 Skip result validation
-  --quiet                       Suppress nonessential stdout
-  --log-level <level>           ERROR|WARN|INFO|DEBUG (default: INFO)
-
-Workload options:
+Parameters (override the profile's value):
   --dtype <value>               Tensor, element, or storage data type (smoke/baseline/extended: bfloat16)
   --input-len <n>               Input or prompt token length (smoke 64, baseline 512, extended 1024)
   --output-len <n>              Number of generated or output tokens (smoke 16, baseline 860, extended 8100)
@@ -46,21 +37,23 @@ Workload options:
   --max-total-tokens <n>        Maximum server-side tokens held in the scheduling or KV-cache pool (smoke 2048, baseline 16384, extended 32768)
   --seed <n>                    Random seed used for reproducibility (smoke/baseline/extended: 42)
 
-Information:
+General options:
+  --config <file>               Config file (default: config/benchmark_config.yaml)
+  --quiet                       Suppress nonessential stdout
+  --log-level <level>           ERROR|WARN|INFO|DEBUG (default: INFO)
   --specification               Print this workload's specification and exit
   --help                        Show this help and exit
 
 Examples:
-  bash run_benchmark.sh --smoke --validate
-  bash run_benchmark.sh --baseline --validate
-  bash run_benchmark.sh --extended --validate
-  bash run_benchmark.sh --specification
+  bash run_benchmark.sh --smoke
+  bash run_benchmark.sh --baseline
+  bash run_benchmark.sh --extended
+  bash run_benchmark.sh --baseline --num-prompts 4
 USAGE
 }
 
 PROFILE="smoke"
 CONFIG_FILE="config/benchmark_config.yaml"
-VALIDATE=1
 QUIET=0
 LOG_LEVEL_VALUE="INFO"
 MODEL_NAME=""
@@ -93,8 +86,7 @@ while [[ $# -gt 0 ]]; do
     --baseline) PROFILE="baseline"; shift ;;
     --extended) PROFILE="extended"; shift ;;
     --config) CONFIG_FILE="${2:-}"; shift 2 ;;
-    --validate) VALIDATE=1; shift ;;
-    --no-validate) VALIDATE=0; shift ;;
+    --validate) shift ;;  # ignored; result validation always runs
     --quiet) QUIET=1; shift ;;
     --log-level) LOG_LEVEL_VALUE="${2:-}"; shift 2 ;;
     --model-name) MODEL_NAME="${2:-}"; shift 2 ;;
@@ -112,7 +104,6 @@ done
 set_log_level "${LOG_LEVEL_VALUE}"
 begin_benchmark_run "${PROFILE}"
 BENCHMARK_RUN_COMMAND="bash run_benchmark.sh --${PROFILE}"
-[[ "${VALIDATE}" -eq 1 ]] && BENCHMARK_RUN_COMMAND+=" --validate"
 set_benchmark_run_command "${BENCHMARK_RUN_COMMAND}"
 bash scripts/ensure_setup.sh
 mark_benchmark_measure_start
@@ -158,7 +149,6 @@ SEED="${SEED:-$(yaml_get seed)}"
 SEED="${SEED:-42}"
 OUTPUT_FORMAT="${OUTPUT_FORMAT:-csv}"
 BENCHMARK_RUN_COMMAND="bash run_benchmark.sh --${PROFILE}"
-[[ "${VALIDATE}" -eq 1 ]] && BENCHMARK_RUN_COMMAND+=" --validate"
 BENCHMARK_RUN_COMMAND+=" --model-name $(printf %q "${MODEL_NAME}") --dtype ${DTYPE} --input-len ${INPUT_LEN} --output-len ${OUTPUT_LEN} --num-prompts ${NUM_PROMPTS} --schedule-policy ${SCHEDULE_POLICY} --max-total-tokens ${MAX_TOTAL_TOKENS} --max-running-requests ${MAX_RUNNING_REQUESTS} --max-concurrency ${MAX_CONCURRENCY} --request-rate ${REQUEST_RATE} --seed ${SEED}"
 set_benchmark_run_command "${BENCHMARK_RUN_COMMAND}"
 HOSTNAME_VALUE="$(hostname -s 2>/dev/null || hostname)"
@@ -266,7 +256,7 @@ run_validate() {
 }
 run_collection
 run_parse
-[[ "${VALIDATE}" -eq 1 ]] && run_validate
+run_validate
 record_benchmark_stop
 capture_journal_warnings "${RUN_DIR}" "${BENCHMARK_START_DATETIME}" "${STOP_TIME}"
 bash scripts/collect_hw_sw_info.sh "${RUN_DIR}"
