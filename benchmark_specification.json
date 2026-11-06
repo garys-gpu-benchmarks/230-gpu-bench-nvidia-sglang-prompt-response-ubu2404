@@ -140,6 +140,16 @@
     "value": "-"
   },
   {
+    "field_name": "Validation Objective",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Validates one-at-a-time SGLang prompt latency, token rate, and cache hits. Smoke uses the tiny server"
+  },
+  {
+    "field_name": "Command Tools Executed",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Smoke starts tiny_sglang_server.py; later profiles start sglang.launch_server, then prompt_response_client.py"
+  },
+  {
     "field_name": "run_benchmark Command Plus Options for Smoke Run (One minute or less)",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "bash run_benchmark.sh --smoke --validate --dtype bfloat16 --input-len 64 --output-len 16 --model-name mistralai/Mistral-7B-v0.3 --num-prompts 2 --max-running-requests 1 --max-total-tokens 2048 --seed 42"
@@ -153,16 +163,6 @@
     "field_name": "run_benchmark Command Plus Options for Extended Run (8 to 15 minutes)",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "bash run_benchmark.sh --extended --validate --dtype bfloat16 --input-len 1024 --output-len 8100 --model-name mistralai/Mistral-7B-v0.3 --num-prompts 8 --max-running-requests 1 --max-total-tokens 32768 --seed 42"
-  },
-  {
-    "field_name": "Validation Objective",
-    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "Validates sequential one-request-at-a-time prompt responses, including latency, token rate, and cache-hit reporting. This is not concurrent serving. Smoke uses scripts/tiny_sglang_server.py; baseline and extended use sglang.launch_server"
-  },
-  {
-    "field_name": "Command Tools Executed",
-    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "Smoke starts scripts/tiny_sglang_server.py; baseline and extended start python -m sglang.launch_server, then scripts/prompt_response_client.py"
   },
   {
     "field_name": "Command Execution Details and Purpose",
@@ -377,7 +377,7 @@
   {
     "field_name": "Workload Command Line Executable",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "Smoke starts scripts/tiny_sglang_server.py; baseline and extended start python -m sglang.launch_server, then scripts/prompt_response_client.py"
+    "value": "Smoke starts tiny_sglang_server.py; later profiles start sglang.launch_server, then prompt_response_client.py"
   },
   {
     "field_name": "ROCm Version",
@@ -412,7 +412,7 @@
   {
     "field_name": "Profile Parameter Values",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Parameters_SmokeBaselineExtend",
-    "value": "{\"dtype\": {\"smoke\": \"bfloat16\", \"baseline\": \"bfloat16\", \"extended\": \"bfloat16\", \"notes\": \"\"}, \"input_len\": {\"smoke\": \"64\", \"baseline\": \"512\", \"extended\": \"1024\", \"notes\": \"\"}, \"output_len\": {\"smoke\": \"16\", \"baseline\": \"860\", \"extended\": \"8100\", \"notes\": \"H100 2026-08-16 tiny_sglang sequential 16x6400 -> 220s (3:40). TOKEN_DELAY=0.002. Extended 16x17600 extrapolated ~10:07, not tested. Do not run with 231 (shared port 30000). | 2026-10-21 baseline 1200 -> 860; 230 and 430 now share one value (as 1xx/3xx do). Ledger-predicted baseline runtime 24.04 ~1:58, 26.04 ~4:27 (limits: baseline 5:00, extended 15:00). | 2026-10-21 extended 12000 -> 8100; 230 and 430 now share one value (as 1xx/3xx do). Ledger-predicted extended runtime 24.04 ~7:51, 26.04 ~11:57 (limits: baseline 5:00, extended 15:00)\"}, \"model_name\": {\"smoke\": \"mistralai/Mistral-7B-v0.3\", \"baseline\": \"mistralai/Mistral-7B-v0.3\", \"extended\": \"mistralai/Mistral-7B-v0.3\", \"notes\": \"\"}, \"num_prompts\": {\"smoke\": \"2\", \"baseline\": \"8\", \"extended\": \"8\", \"notes\": \"Sequential prompt-response: 8 prompts at ~40s/req on H100 stays near the 3-5 min baseline.\"}, \"max_running_requests\": {\"smoke\": \"1\", \"baseline\": \"1\", \"extended\": \"1\", \"notes\": \"\"}, \"max_total_tokens\": {\"smoke\": \"2048\", \"baseline\": \"16384\", \"extended\": \"32768\", \"notes\": \"\"}, \"seed\": {\"smoke\": \"42\", \"baseline\": \"42\", \"extended\": \"42\", \"notes\": \"\"}}"
+    "value": "{\"dtype\": {\"smoke\": \"bfloat16\", \"baseline\": \"bfloat16\", \"extended\": \"bfloat16\"}, \"input_len\": {\"smoke\": \"64\", \"baseline\": \"512\", \"extended\": \"1024\"}, \"output_len\": {\"smoke\": \"16\", \"baseline\": \"860\", \"extended\": \"8100\"}, \"model_name\": {\"smoke\": \"mistralai/Mistral-7B-v0.3\", \"baseline\": \"mistralai/Mistral-7B-v0.3\", \"extended\": \"mistralai/Mistral-7B-v0.3\"}, \"num_prompts\": {\"smoke\": \"2\", \"baseline\": \"8\", \"extended\": \"8\"}, \"max_running_requests\": {\"smoke\": \"1\", \"baseline\": \"1\", \"extended\": \"1\"}, \"max_total_tokens\": {\"smoke\": \"2048\", \"baseline\": \"16384\", \"extended\": \"32768\"}, \"seed\": {\"smoke\": \"42\", \"baseline\": \"42\", \"extended\": \"42\"}}"
   },
   {
     "field_name": "Profile Command Authorship",
