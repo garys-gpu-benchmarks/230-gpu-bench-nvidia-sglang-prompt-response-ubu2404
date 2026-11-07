@@ -32,7 +32,7 @@ The model `mistralai/Mistral-7B-v0.3` is gated on Hugging Face. Set `HF_TOKEN` b
 | `model_name` | `--model-name` | mistralai/Mistral-7B-v0.3 | mistralai/Mistral-7B-v0.3 | mistralai/Mistral-7B-v0.3 |
 | `num_prompts` | `--num-prompts` | 2 | 8 | 8 |
 | `max_running_requests` | `--max-running-requests` | 1 | 1 | 1 |
-| `max_total_tokens` | `--max-total-tokens` | 2048 | 16384 | 32768 |
+| `max_total_tokens` | `--max-total-tokens` | 16384 | 16384 | 32768 |
 | `seed` | `--seed` | 42 | 42 | 42 |
 
 Pick a profile with `--smoke` (default), `--baseline` or `--extended`. Any flag in the table overrides that profile's value:
@@ -58,8 +58,8 @@ Profile values live in `config/benchmark_config.yaml`.
 
 - The smoke profile is a quick check with reduced sizes and iteration counts. Use `--baseline` or `--extended` for representative numbers.
 - Port 30000 is exclusive with 231.
-- Smoke is tiny_sglang.
-- Ready-wait 600 s.
+- Every profile starts real SGLang (about 2 min startup).
+- Ready-wait up to 1800 s.
 - Sequential client, not concurrent serving.
 
 ## Output
@@ -92,7 +92,7 @@ cd /opt/benchmarks
 ./show_metrics.sh 230                       # this workload's runs from the ledger
 ```
 
-The suite tools (`run_benchmark_suite.sh`, `get_benchmark_results.sh`, `show_ledger_runs.sh`, `show_metrics.sh`) are documented in [`gpu-bench-suite`](https://github.com/garys-gpu-benchmarks/gpu-bench-suite).
+The suite tools (`run_benchmark_suite.sh`, `get_benchmark_results.sh`, `list_runs.sh`, `show_metrics.sh`) are documented in [`gpu-bench-suite`](https://github.com/garys-gpu-benchmarks/gpu-bench-suite).
 
 Other platforms: [AMD 24.04](https://github.com/garys-gpu-benchmarks/bundle-amd-ubuntu-2404) (101–132), [AMD 26.04](https://github.com/garys-gpu-benchmarks/bundle-amd-ubuntu-2604) (301–332), [NVIDIA 26.04](https://github.com/garys-gpu-benchmarks/bundle-nvidia-ubuntu-2604) (401–432).
 
