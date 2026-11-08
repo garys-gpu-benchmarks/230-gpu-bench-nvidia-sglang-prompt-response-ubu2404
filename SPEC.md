@@ -14,7 +14,7 @@ Locked run_benchmark.sh starts a server on 127.0.0.1:30000 then scripts/prompt_r
 | model_name | `--model-name` | smoke=mistralai/Mistral-7B-v0.3, baseline=mistralai/Mistral-7B-v0.3, extended=mistralai/Mistral-7B-v0.3 | mistralai/Mistral-7B-v0.3 | From Parameter list; see Execution Description With Parameters. |
 | num_prompts | `--num-prompts` | smoke=2, baseline=8, extended=8 | 8 | From Parameter list; see Execution Description With Parameters. |
 | max_running_requests | `--max-running-requests` | smoke=1, baseline=1, extended=1 | 1 | From Parameter list; see Execution Description With Parameters. |
-| max_total_tokens | `--max-total-tokens` | smoke=16384, baseline=16384, extended=32768 | 16384 | From Parameter list; see Execution Description With Parameters. |
+| max_total_tokens | `--max-total-tokens` | smoke=1024, baseline=16384, extended=32768 | 16384 | From Parameter list; see Execution Description With Parameters. |
 | seed | `--seed` | smoke=42, baseline=42, extended=42 | 42 | From Parameter list; see Execution Description With Parameters. |
 
 ## Invocation

@@ -20,10 +20,10 @@ usage() {
 
 Usage: bash run_benchmark.sh [OPTIONS]
 
-Workload Name:          SGLang Prompt-Response Benchmark.
-Main Goal:              Measure sequential SGLang prompt-response latency.
+Workload Name:          SGLang Prompt-Response Benchmark
+Main Goal:              Measure sequential SGLang prompt-response latency
 Command Tools Executed: Every profile starts sglang.launch_server with Mistral-7B-v0.3, then
-                        prompt_response_client.py.
+                        prompt_response_client.py
 
 Profiles (default: --smoke):
   --smoke                       Run smoke profile
@@ -46,8 +46,9 @@ Parameters (override the profile's value):
   --max-running-requests <n>    Maximum server-side requests actively running
                                   all profiles: 1
   --max-total-tokens <n>        Maximum server-side tokens held in the scheduling or KV-cache pool
-                                  smoke/baseline: 16384
-                                  extended:       32768
+                                  smoke:    1024
+                                  baseline: 16384
+                                  extended: 32768
   --seed <n>                    Random seed used for reproducibility (smoke/baseline/extended: 42)
 
 General options:
@@ -206,12 +207,22 @@ run_collection() {
   fi
   export BENCHMARK_READY_WAIT_SEC="${BENCHMARK_READY_WAIT_SEC:-1800}"
   # A consolidated.safetensors cache is not a finished shard set. Download the
-  # index shards and launch with that snapshot directory, not the repo id.
+  # index shards, config.json and the tokenizer files, load AutoConfig and
+  # AutoTokenizer from the snapshot, and launch with that snapshot directory,
+  # not the repo id.
   sglang_model_path="$("${PYTHON_BIN}" scripts/prefetch_sglang_model.py --model-id "${MODEL_NAME}" | tail -n 1)"
   if [[ -z "${sglang_model_path}" || ! -d "${sglang_model_path}" ]]; then
-    die "SGLang shard prefetch did not return a snapshot directory"
+    die "SGLang model prefetch did not return a snapshot with config.json, weights and a loadable tokenizer (see the [FAIL] line above)"
   fi
+  # Restart the published clock after the download (as the vLLM runners do):
+  # the ledger times the server start and the requests, not the network.
+  mark_benchmark_measure_start
   server_cmd="${PYTHON_BIN} -m sglang.launch_server --model-path ${sglang_model_path} --dtype ${DTYPE} --port 30000 --host 127.0.0.1 --tp 1 --attention-backend flashinfer --mem-fraction-static 0.8 --schedule-policy ${SCHEDULE_POLICY} --max-total-tokens ${MAX_TOTAL_TOKENS} --max-running-requests ${MAX_RUNNING_REQUESTS} --enable-cache-report"
+  if [[ "${PROFILE}" == "smoke" ]]; then
+    # Smoke answers two 16-token prompts; CUDA-graph capture is a large part of a
+    # cold start. Baseline and extended still capture graphs. FlashInfer stays on.
+    server_cmd+=" --disable-cuda-graph"
+  fi
   log_run "${server_cmd}"
   echo "${server_cmd}" >> "${COMMAND_LOG}"
   bash -c "${server_cmd}" >> "${RUN_DIR}/server.log" 2>&1 &
