@@ -76,7 +76,7 @@ Every run is checked for completeness and against any `thresholds:` or `baseline
 ## Requirements
 
 - Ubuntu 24.04, root or sudo for `setup.sh`
-- NVIDIA GPU with CUDA 12.6
+- NVIDIA GPU with CUDA 12.8
 - CUDA Runtime, PyTorch-CUDA, Hugging Face Transformers, Mistral-7B-v0.3, SGLang, HTTP client harness, Python 3.12. `setup.sh` installs what is missing; Python packages go into a repo-local `.venv`.
 - A Hugging Face token with access to `mistralai/Mistral-7B-v0.3`
 
