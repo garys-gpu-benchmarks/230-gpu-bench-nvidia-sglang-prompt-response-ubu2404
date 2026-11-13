@@ -40,6 +40,11 @@
     "value": "Every profile starts sglang.launch_server with Mistral-7B-v0.3, then prompt_response_client.py"
   },
   {
+    "field_name": "Execution Description With Parameters",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Locked run_benchmark.sh starts a server on 127.0.0.1:30000 then scripts/prompt_response_client.py (sequential, one request in flight). Every profile uses python -m sglang.launch_server with Mistral-7B-v0.3. yaml dtype bfloat16 is passed by run_benchmark.sh to both the server and prompt_response_client.py. input_len, output_len, num_prompts, max_concurrency (effective 1), and seed come from yaml. Port 30000 is exclusive versus 231"
+  },
+  {
     "field_name": "Metrics",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "#1: E2E latency p50, ms (end_to_end_latency_ms); #2: Time To First Token p50, ms (ttft_ms); #3: Output token generation rate (decode) p50, tokens/s (output_tokens_per_s); #4: RadixAttn hit rate, pct (radixattention_cache_hit_rate_pct); #5: Completed request rate, pct (completed_request_rate_pct)"
@@ -173,11 +178,6 @@
     "field_name": "Command Methodology",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "On every profile, start python -m sglang.launch_server with Mistral-7B-v0.3 on 127.0.0.1:30000. Then submit prompts one at a time with scripts/prompt_response_client.py and record end-to-end latency, TTFT, and output tokens/s. This is not bench_serving.py"
-  },
-  {
-    "field_name": "Execution Description With Parameters",
-    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "Locked run_benchmark.sh starts a server on 127.0.0.1:30000 then scripts/prompt_response_client.py (sequential, one request in flight). Every profile uses python -m sglang.launch_server with Mistral-7B-v0.3. yaml dtype bfloat16 is passed by run_benchmark.sh to both the server and prompt_response_client.py. input_len, output_len, num_prompts, max_concurrency (effective 1), and seed come from yaml. Port 30000 is exclusive versus 231"
   },
   {
     "field_name": "Execution Domain",
